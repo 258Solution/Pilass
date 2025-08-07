@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MozVendas Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">  <!-- TOPO -->  <div class="flex justify-between items-center bg-white p-4 shadow-md">
+    <button id="menuBtn" class="text-2xl">☰</button>
+    <h1 class="text-xl font-bold">MozVendas</h1>
+    <div class="flex gap-3">
+      <button>🔔</button>
+      <button>🌙</button>
+    </div>
+  </div>  <!-- MENU LATERAL -->  <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-md transform -translate-x-full transition-transform duration-300 z-50">
+    <div class="p-4 border-b font-bold text-lg">Menu</div>
+    <ul class="p-4 space-y-4">
+      <li><a href="#" class="flex items-center gap-2">📦 Meus Produtos</a></li>
+      <li><a href="#" class="flex items-center gap-2">💰 Minhas Vendas</a></li>
+      <li><a href="#" class="flex items-center gap-2">💳 Checkout</a></li>
+      <li><a href="#" class="flex items-center gap-2">🗃️ Relatórios</a></li>
+    </ul>
+  </div>  <!-- FUNDO ESCURO AO ABRIR MENU -->  <div id="overlay" class="fixed inset-0 bg-black opacity-50 hidden z-40"></div>  <!-- DASHBOARD PRINCIPAL -->  <div class="p-4 space-y-6">
+    <!-- Alertas -->
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
+      ⚠️ Complete seu cadastro para começar a vender!
+    </div><!-- Estatísticas -->
+<div class="grid grid-cols-2 gap-4">
+  <div class="bg-white rounded-xl shadow-md p-4">
+    <h2 class="text-sm font-semibold text-gray-500">Vendas do dia</h2>
+    <p class="text-2xl font-bold text-green-600">MZN 0</p>
+  </div>
+  <div class="bg-white rounded-xl shadow-md p-4">
+    <h2 class="text-sm font-semibold text-gray-500">Total de vendas</h2>
+    <p class="text-2xl font-bold">0</p>
+  </div>
+</div>
+
+<!-- Filtro de datas -->
+<div class="bg-white rounded-xl p-4 shadow-md">
+  <h3 class="font-semibold mb-2">Filtrar por período:</h3>
+  <div class="flex gap-2 flex-wrap">
+    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Hoje</button>
+    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Ontem</button>
+    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Últimos 7 dias</button>
+    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Últimos 30 dias</button>
+    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Sempre</button>
+  </div>
+</div>
+
+  </div>  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.onclick = () => {
+      sidebar.classList.remove('-translate-x-full');
+      overlay.classList.remove('hidden');
+    }
+
+    overlay.onclick = () => {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+    }
+  </script></body>
+</html>
