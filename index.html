@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ok<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -145,92 +145,6 @@ body {
 .conversao { color: #FFA500; }
 .ticket { color: #8A2BE2; }
 
-/* Card gráfico */
-#cardGrafico {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 20px;
-}
-
-/* Título dentro do card do gráfico */
-.titulo-grafico {
-    font-weight: 700;
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.chart-card{
-  background:#fff;
-  border-radius:10px;
-  padding:16px;
-  box-shadow:0 6px 20px rgba(15,23,42,0.1);
-  width:100%;
-  max-width:360px;
-  margin:0 auto;
-}
-
-.chart-title{ 
-  font-weight:700; 
-  font-size:16px; 
-  margin-bottom:8px; 
-  text-align:center;
-}
-
-.chart-wrap{
-  width:100%;
-  height:180px;
-  position:relative;
-}
-
-.center-total{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
-  pointer-events:none;
-}
-
-.center-total .label{
-  color:#6b7280;
-  font-size:12px;
-}
-
-.center-total .num{
-  font-weight:700;
-  font-size:16px;
-  margin-top:4px;
-}
-
-.center-total .sub-label{
-  font-size:11px;
-  color:#6b7280;
-  margin-top:4px;
-}
-
-.legend-row{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  margin-top:6px;
-}
-
-.legend-item{
-  display:flex;
-  gap:6px;
-  align-items:center;
-  font-size:12px;
-  color:#6b7280;
-  cursor:pointer;
-}
-
-.legend-swatch{
-  width:10px;
-  height:10px;
-  border-radius:2px;
-}
 
 </style>
 </head>
@@ -282,28 +196,8 @@ body {
     </div>
 </div>
 
-<div class="chart-card">
-  <div class="chart-title">Gráfico de Vendas</div>
 
-  <div class="chart-wrap">
-    <canvas id="doughnutChart"></canvas>
 
-    <div class="center-total">
-      <div class="label">TOTAL</div>
-      <div class="num" id="centerValue">0 MT</div>
-      <div class="sub-label">M-Pesa + E-Mola</div>
-    </div>
-  </div>
-
-  <div class="legend-row">
-    <div class="legend-item" data-index="0">
-      <div class="legend-swatch" style="background:#FF4136"></div>M-Pesa
-    </div>
-    <div class="legend-item" data-index="1">
-      <div class="legend-swatch" style="background:#FFA500"></div>E-Mola
-    </div>
-  </div>
-</div>
 
 <script>
 // Dropdown
@@ -347,55 +241,6 @@ calendarInput.addEventListener("change", () => {
     }
 });
 
-
-   const fmt = n => new Intl.NumberFormat('pt-MZ').format(Math.round(n));
-
-// Dados do gráfico
-const mpesa = 4000;
-const emola = 2400;
-const total = mpesa + emola;
-document.getElementById('centerValue').textContent = fmt(total)+' MT';
-
-const ctx = document.getElementById('doughnutChart').getContext('2d');
-
-const data = [mpesa, emola];
-
-const chart = new Chart(ctx, {
-  type:'doughnut',
-  data:{
-    labels:['M-Pesa','E-Mola'],
-    datasets:[{
-      data: data,
-      backgroundColor:['#FF4136','#FFA500']
-    }]
-  },
-  options:{
-    cutout:'62%',
-    plugins:{
-      legend:{ display:false },
-      tooltip:{
-        callbacks:{
-          label:function(ctx){
-            const val = ctx.raw;
-            const pct = (val/total*100).toFixed(1);
-            return `${fmt(val)} MT (${pct}%)`;
-          }
-        }
-      }
-    },
-    maintainAspectRatio:false
-  }
-});
-
-// Legenda clicável: mostra/esconde fatias
-document.querySelectorAll('.legend-item').forEach(el=>{
-  el.addEventListener('click', ()=>{
-    const idx = el.dataset.index;
-    const meta = chart.getDatasetMeta(0).data[idx];
-    meta.hidden = !meta.hidden;
-    chart.update();
-  });
-}); 
 </script>
 
 </body>
