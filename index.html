@@ -180,6 +180,74 @@ body{
   height:10px;
   border-radius:2px;
 }
+
+ footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.08);
+  z-index: 1000;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.logo-square {
+  width: 28px;
+  height: 28px;
+  background: var(--bg-color);
+  border: 2px solid var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-color);
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+.logo-square:hover { transform: scale(1.06); }
+
+.logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-color);
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#toggle-theme, #menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+#toggle-theme { font-size: 23px; }
+#menu-btn { font-size: 18px; }
+
+#toggle-theme:hover, #menu-btn:hover { transform: scale(1.05); } 
 </style>
 </head>
 <body>
@@ -228,7 +296,20 @@ body{
       <div class="valor ticket">2 MZN</div>
   </div>
 </div>
-
+<footer>
+  <div class="footer-left">
+    <div class="logo-square">V</div>
+    <div class="logo-text">Vendoo</div>
+  </div>
+  <div class="footer-right">
+    <button id="toggle-theme" aria-label="Alternar tema">
+      <i id="theme-icon" class="bi bi-sun"></i>
+    </button>
+    <button id="menu-btn" aria-label="Abrir menu">
+      Menu <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</footer>
 <!-- Card Gráfico -->
 <div class="chart-card">
   <div class="chart-title">Gráfico de Vendas</div>
@@ -326,6 +407,39 @@ legendItems.forEach(item => {
   });
 });
 
+  // Alternar tema claro/escuro
+const toggleBtn = document.getElementById('toggle-theme');
+toggleBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('theme-icon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.replace('bi-sun', 'bi-moon');
+  } else {
+    themeIcon.classList.replace('bi-moon', 'bi-sun');
+  }
+});
+
+// Ajuste automático do sistema para dark mode
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.body.classList.add('dark-mode');
+  document.getElementById('theme-icon').classList.replace('bi-sun', 'bi-moon');
+}
+
+// Menu lateral
+const menuBtn = document.getElementById('menu-btn');
+const sideMenu = document.getElementById('side-menu');
+const closeMenu = document.getElementById('close-menu');
+
+menuBtn.addEventListener('click', () => {
+  sideMenu.classList.add('active');
+  menuBtn.style.display = 'none'; // esconde o botão
+});
+
+closeMenu.addEventListener('click', () => {
+  sideMenu.classList.remove('active');
+  menuBtn.style.display = 'flex'; // mostra o botão novamente
+});
+  
  
 </script>
 
