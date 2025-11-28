@@ -194,16 +194,18 @@ body {
 
 /* RODAPÉ */
 footer {
-  position: relative; /* agora segue a ordem normal da página */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: var(--card-bg);
   color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 16px;
-  box-shadow: 0 2px 10px var(--shadow-color); /* sombra para cima */
-  margin-top: 20px; /* dá um espaço acima do rodapé */
-  z-index: 1;
+  box-shadow: 0 -2px 10px var(--shadow-color);
+  z-index: 1000;
 }
 
 .footer-left {
