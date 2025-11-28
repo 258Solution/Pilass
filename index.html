@@ -162,31 +162,7 @@ body {
 }
 
 /* Gráfico */
-#chartContainer {
-    position: relative;
-    width: 300px;
-    height: 300px;
-}
 
-.total-vendas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-.total-vendas div:first-child {
-    font-size: 16px;
-    font-weight: bold;
-    color: #555;
-}
-
-.total-vendas div:last-child {
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-}
 </style>
 </head>
 <body>
@@ -237,19 +213,7 @@ body {
     </div>
 </div>
 
-<!-- Card do gráfico -->
-<div id="cardGrafico" class="card">
-    <!-- Título do gráfico dentro do card -->
-    <div class="titulo-grafico">Gráfico de Vendas</div>
 
-    <div id="chartContainer">
-        <canvas id="vendasChart"></canvas>
-        <div class="total-vendas">
-            <div>TOTAL</div>
-            <div id="totalVendido">0 MZN</div>
-        </div>
-    </div>
-</div>
 
 <script>
 // Dropdown
@@ -293,40 +257,7 @@ calendarInput.addEventListener("change", () => {
     }
 });
 
-// Gráfico de vendas
-const vendasMpesa = 120;
-const vendasEmola = 80;
-const totalVendas = vendasMpesa + vendasEmola;
-document.getElementById('totalVendido').textContent = totalVendas + ' MZN';
 
-const ctx = document.getElementById('vendasChart').getContext('2d');
-
-new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-        labels: ['M-Pesa', 'E-Mola'],
-        datasets: [{
-            data: [vendasMpesa, vendasEmola],
-            backgroundColor: ['#FF4136', '#FFA500'],
-            hoverOffset: 10
-        }]
-    },
-    options: {
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function(context) {
-                        const valor = context.raw;
-                        const percent = ((valor / totalVendas) * 100).toFixed(1);
-                        return `${context.label}: ${valor} MZN (${percent}%)`;
-                    }
-                }
-            },
-            legend: { position: 'bottom' }
-        },
-        cutout: '60%'
-    }
-});
 </script>
 
 </body>
