@@ -180,12 +180,84 @@ body{
   height:10px;
   border-radius:2px;
 }
+  /* ===============================
+   MENU LATERAL
+=============================== */
+#side-menu {
+  position: fixed;
+  top: 0;
+  right: -300px; /* escondido inicialmente */
+  width: 300px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#side-menu.active { right: 0; }
+
+#close-menu {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.side-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.side-menu-item:hover { background-color: #f0f0f0; }
+.side-menu-item i { font-size: 20px; }
+
+/* Botão menu */
+#menu-btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s;
+}
+#menu-btn:hover { background-color: #0056b3; }
 </style>
 </head>
 <body>
 
 <div class="titulo-dashboard">Dashboard</div>
+<!-- Botão abrir menu -->
+<button id="menu-btn">Menu <i class="bi bi-list"></i></button>
 
+<!-- Menu lateral -->
+<div id="side-menu">
+  <button id="close-menu" aria-label="Fechar menu"><i class="bi bi-x-lg"></i></button>
+  <div class="side-menu-item"><i class="bi bi-person-bounding-box"></i> Perfil</div>
+  <div class="side-menu-item"><i class="bi bi-house"></i> Dashboard</div>
+  <div class="side-menu-item"><i class="bi bi-box-seam"></i> Produtos</div>
+  <div class="side-menu-item"><i class="bi bi-cash-stack"></i> Meu checkout</div>
+  <div class="side-menu-item"><i class="bi bi-credit-card-fill"></i> Financeiro</div>
+  <div class="side-menu-item"><i class="bi bi-file-earmark-bar-graph"></i> Relatório</div>
+</div>
 <!-- Card de Métricas -->
 <div class="card">
 
@@ -328,6 +400,20 @@ legendItems.forEach(item => {
     doughnutChart.update();
   });
 });
+
+ const menuBtn = document.getElementById('menu-btn');
+const sideMenu = document.getElementById('side-menu');
+const closeMenu = document.getElementById('close-menu');
+
+menuBtn.addEventListener('click', () => {
+  sideMenu.classList.add('active');
+  menuBtn.style.display = 'none'; // esconde o botão
+});
+
+closeMenu.addEventListener('click', () => {
+  sideMenu.classList.remove('active');
+  menuBtn.style.display = 'flex'; // mostra o botão novamente
+}); 
 </script>
 
 </body>
