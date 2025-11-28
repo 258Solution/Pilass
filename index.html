@@ -1,66 +1,189 @@
-<!DOCTYPE html><html lang="pt">
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MozVendas Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Vertical</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --card-bg:#fff;
+    --muted:#6b7280;
+    --shadow:0 8px 30px rgba(15,23,42,0.08);
+    --red:#FF4136;
+    --orange:#FFA500;
+    --green:#16a34a;
+    font-family: 'Inter', sans-serif;
+  }
+
+  body{
+    margin:20px;
+    background:#f3f4f6;
+    display:flex;
+    justify-content:center;
+    font-size:14px;
+    color:#0f172a;
+  }
+
+  .wrap{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+    width:420px;
+    max-width:95%;
+  }
+
+  .card{
+    background:var(--card-bg);
+    border-radius:12px;
+    padding:16px;
+    box-shadow:var(--shadow);
+      margin-bottom: 7px;
+  }
+
+  .title{ font-weight:700; font-size:18px; margin-bottom:12px; }
+
+  /* Funil compacto */
+  .funil { display:flex; flex-direction:column; gap:8px; }
+  .step{ display:flex; flex-direction:column; gap:4px; }
+  .step-head{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
+  .bar-wrap{ height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; }
+  .bar{ height:100%; border-radius:999px; transition:width 600ms ease; }
+  .bar.impr { background: linear-gradient(90deg,#93c5fd,#2563eb); }
+  .bar.click { background: linear-gradient(90deg,#fcd34d,#f59e0b); }
+  .bar.lead { background: linear-gradient(90deg,#86efac,#16a34a); }
+  .bar.cart { background: linear-gradient(90deg,#fbcfe8,#ec4899); }
+  .bar.checkout { background: linear-gradient(90deg,#c7d2fe,#7c3aed); }
+  .bar.buy { background: linear-gradient(90deg,#ff9a9e,#ff6a88); }
+  .loss{ color:#ef4444; font-size:12px; }
+
+  /* Gráfico */
+  .chart-card { display:flex; flex-direction:column; align-items:center; gap:12px; padding:8px;}
+  .chart-title{ font-weight:700; font-size:16px; }
+  .chart-wrap{ width:280px; height:280px; position:relative; }
+  .center-total{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  .center-total .label{ color:var(--muted); font-size:13px; }
+  .center-total .num{ font-weight:800; font-size:20px; margin-top:4px; }
+  .legend-row{ display:flex; gap:12px; margin-top:8px; }
+  .legend-item{ display:flex; gap:8px; align-items:center; font-size:13px; color:var(--muted); }
+  .legend-swatch{ width:12px; height:12px; border-radius:3px; }
+
+  /* Cards Lucro/ROI/CPA */
+  .perf{ display:flex; gap:9px; margin-top:12px; justify-content:center; }
+  .box{ flex:1; background:#fbfdff; padding:8px; border-radius:10px; border:1px solid #eef2f7; text-align:center; font-size:12px; }
+  .box .v{ font-weight:700; font-size:16px; }
+  .box .t{ color:var(--muted); font-size:12px; }
+
+</style>
 </head>
-<body class="bg-gray-100 text-gray-800">  <!-- TOPO -->  <div class="flex justify-between items-center bg-white p-4 shadow-md">
-    <button id="menuBtn" class="text-2xl">☰</button>
-    <h1 class="text-xl font-bold">MozVendas</h1>
-    <div class="flex gap-3">
-      <button>🔔</button>
-      <button>🌙</button>
+<body>
+
+<div class="wrap">
+
+  <!-- Funil -->
+  <div class="card" id="cardFunil">
+    <div class="title">Funil de Conversão</div>
+    <div class="funil" id="funilConversion"></div>
+  </div>
+
+  <!-- Gráfico + Cards -->
+  <div class="card chart-card" id="cardGraficoVendas">
+    <div class="chart-title">Gráfico de Vendas</div>
+    <div class="chart-wrap">
+      <canvas id="doughnutChartVendas" width="280" height="280"></canvas>
+      <div class="center-total" id="centerTotalVendas">
+        <div class="label">TOTAL</div>
+        <div class="num" id="centerValueVendas">0 MT</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px;" id="centerSubVendas">M-Pesa + E-Mola</div>
+      </div>
     </div>
-  </div>  <!-- MENU LATERAL -->  <div id="sidebar" class="fixed top-0 left-0 h-full w-64 bg-white shadow-md transform -translate-x-full transition-transform duration-300 z-50">
-    <div class="p-4 border-b font-bold text-lg">Menu</div>
-    <ul class="p-4 space-y-4">
-      <li><a href="#" class="flex items-center gap-2">📦 Meus Produtos</a></li>
-      <li><a href="#" class="flex items-center gap-2">💰 Minhas Vendas</a></li>
-      <li><a href="#" class="flex items-center gap-2">💳 Checkout</a></li>
-      <li><a href="#" class="flex items-center gap-2">🗃️ Relatórios</a></li>
-    </ul>
-  </div>  <!-- FUNDO ESCURO AO ABRIR MENU -->  <div id="overlay" class="fixed inset-0 bg-black opacity-50 hidden z-40"></div>  <!-- DASHBOARD PRINCIPAL -->  <div class="p-4 space-y-6">
-    <!-- Alertas -->
-    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4">
-      ⚠️ Complete seu cadastro para começar a vender!
-    </div><!-- Estatísticas -->
-<div class="grid grid-cols-2 gap-4">
-  <div class="bg-white rounded-xl shadow-md p-4">
-    <h2 class="text-sm font-semibold text-gray-500">Vendas do dia</h2>
-    <p class="text-2xl font-bold text-green-600">MZN 0</p>
+
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-swatch" style="background:#FF4136"></div>M-Pesa</div>
+      <div class="legend-item"><div class="legend-swatch" style="background:#FFA500"></div>E-Mola</div>
+    </div>
+
+    <div class="perf">
+      <div class="box">
+        <div class="v" id="profitBoxVendas">0 MT</div>
+        <div class="t">Lucro</div>
+      </div>
+      <div class="box">
+        <div class="v" id="roiBoxVendas">0%</div>
+        <div class="t">ROI</div>
+      </div>
+      <div class="box">
+        <div class="v" id="cpaBoxVendas">0 MT</div>
+        <div class="t">Custo por Venda</div>
+      </div>
+    </div>
   </div>
-  <div class="bg-white rounded-xl shadow-md p-4">
-    <h2 class="text-sm font-semibold text-gray-500">Total de vendas</h2>
-    <p class="text-2xl font-bold">0</p>
-  </div>
+
 </div>
 
-<!-- Filtro de datas -->
-<div class="bg-white rounded-xl p-4 shadow-md">
-  <h3 class="font-semibold mb-2">Filtrar por período:</h3>
-  <div class="flex gap-2 flex-wrap">
-    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Hoje</button>
-    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Ontem</button>
-    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Últimos 7 dias</button>
-    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Últimos 30 dias</button>
-    <button class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Sempre</button>
-  </div>
-</div>
+<script>
+const fmt = n => new Intl.NumberFormat('pt-MZ').format(Math.round(n));
 
-  </div>  <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
+// Funil
+const stepsData = [
+  { id:'imprF', name:'Impressões', value:35000 },
+  { id:'clickF', name:'Cliques', value:2120 },
+  { id:'leadF', name:'Leads', value:420 },
+  { id:'cartF', name:'Adições ao carrinho', value:90 },
+  { id:'checkoutF', name:'Início de checkout', value:50 },
+  { id:'buyF', name:'Vendas', value:32 }
+];
 
-    menuBtn.onclick = () => {
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.remove('hidden');
-    }
+const funil = document.getElementById('funilConversion');
+const base = Math.max(...stepsData.map(s=>s.value),1);
+stepsData.forEach((s,i)=>{
+  const nextVal = (i<stepsData.length-1)? stepsData[i+1].value : s.value;
+  const dropPct = s.value ? (100 - (nextVal/s.value*100)) : 0;
+  const el = document.createElement('div');
+  el.className = 'step';
+  el.innerHTML = `
+    <div class="step-head">
+      <div>${s.name}</div>
+      <div>${fmt(s.value)} <span class="loss">(${dropPct.toFixed(1)}%)</span></div>
+    </div>
+    <div class="bar-wrap"><div class="bar ${s.id}" style="width:${(s.value/base*100).toFixed(1)}%"></div></div>
+  `;
+  funil.appendChild(el);
+});
 
-    overlay.onclick = () => {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('hidden');
-    }
-  </script></body>
+// Gráfico
+const mpesa = 4000;
+const emola = 2400;
+const total = mpesa + emola;
+document.getElementById('centerValueVendas').textContent = fmt(total)+' MT';
+
+const ctx = document.getElementById('doughnutChartVendas').getContext('2d');
+new Chart(ctx, {
+  type:'doughnut',
+  data:{
+    labels:['M-Pesa','E-Mola'],
+    datasets:[{
+      data:[mpesa, emola],
+      backgroundColor:['#FF4136','#FFA500']
+    }]
+  },
+  options:{
+    cutout:'62%',
+    plugins:{ legend:{ display:false } }
+  }
+});
+
+// Cards Lucro/ROI/CPA
+const revenue = 6400;
+const invested = 1200;
+const purchases = 32;
+const profit = revenue-invested;
+const roi = invested? ((profit/invested)*100).toFixed(1) : 0;
+const cpa = purchases? (invested/purchases) : 0;
+document.getElementById('profitBoxVendas').textContent = fmt(profit)+' MT';
+document.getElementById('roiBoxVendas').textContent = roi+'%';
+document.getElementById('cpaBoxVendas').textContent = fmt(cpa)+' MT';
+
+</script>
+</body>
 </html>
