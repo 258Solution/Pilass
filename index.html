@@ -112,7 +112,16 @@ body{
     height:10px;
     border-radius:2px;
 }
-  #btnPeriodo {
+  .periodo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 12px; /* espaço entre período e primeiras seções */
+    position: relative;
+    width: 100%;
+}
+
+#btnPeriodo {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -121,8 +130,7 @@ body{
     border-radius: 8px;
     padding: 8px 12px;
     cursor: pointer;
-    width: 150px;
-    margin-bottom: 8px;
+    width: 100%;
 }
 
 #btnPeriodo .arrow {
@@ -137,8 +145,10 @@ body{
     background: #fff;
     padding: 8px 0;
     position: absolute;
+    top: 40px; /* abaixo do botão */
+    left: 0;
+    width: 100%;
     z-index: 10;
-    width: 150px;
 }
 
 #periodoDrop .option {
@@ -162,7 +172,7 @@ body{
 
 #calendarInput {
     position: absolute;
-    left: -9999px; /* escondido mas funcional */
+    left: -9999px;
 }
 </style>
 </head>
@@ -170,22 +180,23 @@ body{
 
 <div class="titulo-dashboard">Dashboard Métricas</div>
 
-<!-- Botão Período -->
-<div id="btnPeriodo">
-    <span id="periodoSelected">Hoje</span>
-    <i class="bi bi-chevron-down arrow"></i>
-</div>
 
-<!-- Dropdown Período -->
-<div id="periodoDrop">
-    <div class="option selected" data-value="Hoje">Hoje</div>
-    <div class="option" data-value="Ontem">Ontem</div>
-    <div class="option" data-value="Últimos 7 dias">Últimos 7 dias</div>
-    <div class="option" data-value="Últimos 30 dias">Últimos 30 dias</div>
-    <div id="btnCalendario">Calendário</div>
-    <input type="date" id="calendarInput">
-</div>
-  
+<!-- Div Período - colocar dentro do card, acima das seções -->
+<div class="periodo-container">
+    <div id="btnPeriodo">
+        <span id="periodoSelected">Hoje</span>
+        <i class="bi bi-chevron-down arrow"></i>
+    </div>
+
+    <div id="periodoDrop">
+        <div class="option selected" data-value="Hoje">Hoje</div>
+        <div class="option" data-value="Ontem">Ontem</div>
+        <div class="option" data-value="Últimos 7 dias">Últimos 7 dias</div>
+        <div class="option" data-value="Últimos 30 dias">Últimos 30 dias</div>
+        <div id="btnCalendario">Calendário</div>
+        <input type="date" id="calendarInput">
+    </div>
+
 <div class="card">
    <div class="secao">
         <i class="bi bi-cash-coin secao-icon"></i>
@@ -274,17 +285,15 @@ document.querySelectorAll('.legend-item').forEach(item=>{
 
   const btnPeriodo = document.getElementById("btnPeriodo");
 const periodoDrop = document.getElementById("periodoDrop");
-const options = document.querySelectorAll(".option");
+const options = periodoDrop.querySelectorAll(".option");
 const periodoSelected = document.getElementById("periodoSelected");
 const btnCalendario = document.getElementById("btnCalendario");
 const calendarInput = document.getElementById("calendarInput");
 
-// Toggle dropdown
 btnPeriodo.addEventListener("click", () => {
     periodoDrop.style.display = periodoDrop.style.display === "flex" ? "none" : "flex";
 });
 
-// Seleção de opção
 options.forEach(opt => {
     opt.addEventListener("click", () => {
         options.forEach(o => o.classList.remove("selected"));
@@ -294,13 +303,11 @@ options.forEach(opt => {
     });
 });
 
-// Abrir calendário
 btnCalendario.addEventListener("click", () => {
     calendarInput.focus();
     calendarInput.click();
 });
 
-// Seleção de data
 calendarInput.addEventListener("change", () => {
     const date = new Date(calendarInput.value);
     if(date.toString() !== "Invalid Date"){
