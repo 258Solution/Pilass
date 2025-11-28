@@ -1,170 +1,330 @@
-<!DOCTYPE html>  <html lang="pt-BR">  
-<head>  
-<meta charset="UTF-8">  
-<meta name="viewport" content="width=device-width, initial-scale=1.0">  
-<title>Dashboard Compacto</title>  
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
-<style>  
-  :root{  
-    --card-bg:#fff;  
-    --muted:#6b7280;  
-    --shadow:0 6px 20px rgba(15,23,42,0.1);  
-    --red:#FF4136;  
-    --orange:#FFA500;  
-    --green:#16a34a;  
-    font-family:'Inter', sans-serif;  
-  }  body{
-margin:10px;
-background:#f3f4f6;
-display:flex;
-justify-content:center;
-font-size:14px;
-color:#0f172a;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendoo - Dashboard</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.wrap{
-display:flex;
-gap:16px;
-width:95%;
-max-width:290px;
+/* Dashboard title */
+.titulo-dashboard {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 14px;
+    align-self: flex-start;
 }
 
-/* Funil */
-.card{
-background:var(--card-bg);
-border-radius:10px;
-padding:16px;
-box-shadow:var(--shadow);
-display:flex;
-flex-direction:column;
-gap:12px;
-  width:100px;
+/* Card */
+.card {
+    width: 280px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
 }
-.title{ font-weight:700; font-size:16px; margin-bottom:8px; }
-.funil { display:flex; flex-direction:column; gap:15px; }
-.step{ display:flex; flex-direction:column; gap:2px; margin-bottom:15px;}
-.step-head{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
-.bar-wrap{ height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; }
-.bar{ height:100%; border-radius:999px; transition:width 500ms ease; }
-.bar.impr { background: linear-gradient(90deg,#93c5fd,#2563eb); }
-.bar.click { background: linear-gradient(90deg,#fcd34d,#f59e0b); }
-.bar.lead { background: linear-gradient(90deg,#86efac,#16a34a); }
-.bar.cart { background: linear-gradient(90deg,#fbcfe8,#ec4899); }
-.bar.checkout { background: linear-gradient(90deg,#c7d2fe,#7c3aed); }
-.bar.buy { background: linear-gradient(90deg,#ff9a9e,#ff6a88); }
-.loss{ color:#ef4444; font-size:12px; }
+
+/* Espaço entre cards */
+#cardMetricas { margin-bottom: 50px; }
+
+/* Botão de período */
+#btnPeriodo {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 7px;
+    border: 1px solid #ddd;
+    background: #fafafa;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    margin-bottom:20px;
+}
+
+#btnPeriodo::before {
+    content: "PERÍODO";
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: #fff;
+    padding: 0 6px;
+    font-size: 12px;
+    color: #555;
+    font-weight: bold;
+}
+
+.arrow { transition: transform 0.3s ease; }
+
+/* Dropdown */
+#periodoDrop {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    z-index: 10;
+    padding: 8px 0;
+}
+
+.option {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.option:hover, .option.selected {
+    background: #e0e0e0;
+}
+
+#btnCalendario {
+    margin: 8px 16px;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+#calendarInput { position: absolute; left: -9999px; }
+
+/* Seções verticais */
+.secao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    margin-bottom:20px;
+}
+
+.secao-icon { font-size: 40px; color: #007bff; }
+
+.titulo { font-weight: bold; font-size: 14px; text-align: center; }
+.valor { font-size: 17px; font-weight: normal; text-align: center; }
+
+/* Cores por seção */
+.faturamento { color: #228B22; }
+.vendas { color: #007bff; }
+.conversao { color: #FFA500; }
+.ticket { color: #8A2BE2; }
 
 /* Card gráfico */
-.chart-card{ display:flex; flex-direction:column; background:var(--card-bg); border-radius:10px; padding:16px; box-shadow:var(--shadow); gap:12px; width:270px; }
-.chart-title{ font-weight:700; font-size:16px; text-align:center; }
-.chart-wrap{ width:100%; height:220px; position:relative; }
-.center-total{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
-.center-total .label{ color:var(--muted); font-size:12px; }
-.center-total .num{ font-weight:700; font-size:18px; margin-top:4px; }
-.legend-row{ display:flex; gap:12px; justify-content:center; margin-top:6px; }
-.legend-item{ display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted); }
-.legend-swatch{ width:10px; height:10px; border-radius:2px; }
+#cardGrafico {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px;
+}
 
-/* Cards Lucro/ROI/CPA */
-.perf{ display:flex; flex-direction:column; gap:6px; margin-top:8px; }
-.box{ background:#fbfdff; padding:6px; border-radius:8px; border:1px solid #eef2f7; text-align:center; font-size:12px; }
-.box .v{ font-weight:700; font-size:14px; }
-.box .t{ color:var(--muted); font-size:11px; }
+/* Título dentro do card do gráfico */
+.titulo-grafico {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Gráfico */
+#chartContainer {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+.total-vendas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.total-vendas div:first-child {
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+.total-vendas div:last-child {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
 </style>
+</head>
+<body>
 
-</head>  
-<body>  <div class="wrap">    <!-- Funil -->    <div class="card" id="cardFunil">  
-    <div class="title">Funil de Conversão</div>  
-    <div class="funil" id="funilConversion"></div>  
-  </div>    <!-- Gráfico + Cards -->    <div class="chart-card" id="cardGrafico">  
-    <div class="chart-title">Gráfico de Vendas</div>  
-    <div class="chart-wrap">  
-      <canvas id="doughnutChart" width="280" height="220"></canvas>  
-      <div class="center-total">  
-        <div class="label">TOTAL</div>  
-        <div class="num" id="centerValue">0 MT</div>  
-        <div style="font-size:11px;color:var(--muted);margin-top:4px;">M-Pesa + E-Mola</div>  
-      </div>  
-    </div>  <div class="legend-row">  
-  <div class="legend-item"><div class="legend-swatch" style="background:#FF4136"></div>M-Pesa</div>  
-  <div class="legend-item"><div class="legend-swatch" style="background:#FFA500"></div>E-Mola</div>  
-</div>  
+<div class="titulo-dashboard">Dashboard</div>
 
-<div class="perf">  
-  <div class="box">  
-    <div class="v" id="profitBox">0 MT</div>  
-    <div class="t">Lucro</div>  
-  </div>  
-  <div class="box">  
-    <div class="v" id="roiBox">0%</div>  
-    <div class="t">ROI</div>  
-  </div>  
-  <div class="box">  
-    <div class="v" id="cpaBox">0 MT</div>  
-    <div class="t">Custo por Venda</div>  
-  </div>  
+<!-- Card de métricas -->
+<div id="cardMetricas" class="card">
+    <!-- Botão de período -->
+    <div id="btnPeriodo">
+        <span id="periodoSelected">Hoje</span>
+        <i class="bi bi-chevron-down arrow"></i>
+    </div>
+
+    <!-- Dropdown -->
+    <div id="periodoDrop">
+        <div class="option selected" data-value="Hoje">Hoje</div>
+        <div class="option" data-value="Ontem">Ontem</div>
+        <div class="option" data-value="Últimos 7 dias">Últimos 7 dias</div>
+        <div class="option" data-value="Últimos 30 dias">Últimos 30 dias</div>
+        <div id="btnCalendario">Calendário</div>
+        <input type="date" id="calendarInput">
+    </div>
+
+    <!-- Seções -->
+    <div class="secao">
+        <i class="bi bi-cash-coin secao-icon"></i>
+        <div class="titulo">Faturamento</div>
+        <div class="valor faturamento">100 MZN</div>
+    </div>
+
+    <div class="secao">
+        <i class="bi bi-cart-check-fill secao-icon"></i>
+        <div class="titulo">Vendas Realizadas</div>
+        <div class="valor vendas">50</div>
+    </div>
+
+    <div class="secao">
+        <i class="bi bi-graph-up secao-icon"></i>
+        <div class="titulo">Taxa de Conversão</div>
+        <div class="valor conversao">6%</div>
+    </div>
+
+    <div class="secao">
+        <i class="bi bi-receipt secao-icon"></i>
+        <div class="titulo">Ticket Médio</div>
+        <div class="valor ticket">2 MZN</div>
+    </div>
 </div>
 
-  </div>  </div>  <script>  
-const fmt = n => new Intl.NumberFormat('pt-MZ').format(Math.round(n));  
-  
-// Funil  
-const stepsData = [  
-  { id:'impr', name:'Impressões', value:35000 },  
-  { id:'click', name:'Cliques', value:2120 },  
-  { id:'lead', name:'Leads', value:420 },  
-  { id:'cart', name:'Adições ao carrinho', value:90 },  
-  { id:'checkout', name:'Início de checkout', value:50 },  
-  { id:'buy', name:'Vendas', value:32 }  
-];  
-const funil = document.getElementById('funilConversion');  
-const base = Math.max(...stepsData.map(s=>s.value),1);  
-stepsData.forEach((s,i)=>{  
-  const nextVal = (i<stepsData.length-1)? stepsData[i+1].value : s.value;  
-  const dropPct = s.value ? (100 - (nextVal/s.value*100)) : 0;  
-  const el = document.createElement('div');  
-  el.className = 'step';  
-  el.innerHTML = `  
-    <div class="step-head">  
-      <div>${s.name}</div>  
-      <div>${fmt(s.value)} <span class="loss">(${dropPct.toFixed(1)}%)</span></div>  
-    </div>  
-    <div class="bar-wrap"><div class="bar ${s.id}" style="width:${(s.value/base*100).toFixed(1)}%"></div></div>  
-  `;  
-  funil.appendChild(el);  
-});  
-  
-// Gráfico  
-const mpesa = 4000;  
-const emola = 2400;  
-const total = mpesa + emola;  
-document.getElementById('centerValue').textContent = fmt(total)+' MT';  
-  
-const ctx = document.getElementById('doughnutChart').getContext('2d');  
-new Chart(ctx, {  
-  type:'doughnut',  
-  data:{  
-    labels:['M-Pesa','E-Mola'],  
-    datasets:[{  
-      data:[mpesa, emola],  
-      backgroundColor:['#FF4136','#FFA500']  
-    }]  
-  },  
-  options:{  
-    cutout:'62%',  
-    plugins:{ legend:{ display:false } }  
-  }  
-});  
-  
-// Cards Lucro/ROI/CPA  
-const revenue = 6400;  
-const invested = 1200;  
-const purchases = 32;  
-const profit = revenue-invested;  
-const roi = invested? ((profit/invested)*100).toFixed(1) : 0;  
-const cpa = purchases? (invested/purchases) : 0;  
-document.getElementById('profitBox').textContent = fmt(profit)+' MT';  
-document.getElementById('roiBox').textContent = roi+'%';  
-document.getElementById('cpaBox').textContent = fmt(cpa)+' MT';  
-</script>  </body>  
-</html>  Peço para centralizar na página
+<!-- Card do gráfico -->
+<div id="cardGrafico" class="card">
+    <!-- Título do gráfico dentro do card -->
+    <div class="titulo-grafico">Gráfico de Vendas</div>
+
+    <div id="chartContainer">
+        <canvas id="vendasChart"></canvas>
+        <div class="total-vendas">
+            <div>TOTAL</div>
+            <div id="totalVendido">0 MZN</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Dropdown
+const btnPeriodo = document.getElementById("btnPeriodo");
+const periodoDrop = document.getElementById("periodoDrop");
+const options = document.querySelectorAll(".option");
+const periodoSelected = document.getElementById("periodoSelected");
+const btnCalendario = document.getElementById("btnCalendario");
+const calendarInput = document.getElementById("calendarInput");
+let customDateSelected = false;
+
+btnPeriodo.addEventListener("click", () => {
+    periodoDrop.style.display = periodoDrop.style.display === "flex" ? "none" : "flex";
+});
+
+options.forEach(opt => {
+    opt.addEventListener("click", () => {
+        options.forEach(o => o.classList.remove("selected"));
+        opt.classList.add("selected");
+        periodoSelected.textContent = opt.dataset.value;
+        customDateSelected = false;
+        periodoDrop.style.display = "none";
+    });
+});
+
+btnCalendario.addEventListener("click", () => {
+    calendarInput.focus();
+    calendarInput.click();
+});
+
+calendarInput.addEventListener("change", () => {
+    const date = new Date(calendarInput.value);
+    if(date.toString() !== "Invalid Date"){
+        const day = String(date.getDate()).padStart(2,'0');
+        const month = String(date.getMonth()+1).padStart(2,'0');
+        const year = date.getFullYear();
+        periodoSelected.textContent = `${day}/${month}/${year}`;
+        customDateSelected = true;
+        options.forEach(o => o.classList.remove("selected"));
+        periodoDrop.style.display = "none";
+    }
+});
+
+// Gráfico de vendas
+const vendasMpesa = 120;
+const vendasEmola = 80;
+const totalVendas = vendasMpesa + vendasEmola;
+document.getElementById('totalVendido').textContent = totalVendas + ' MZN';
+
+const ctx = document.getElementById('vendasChart').getContext('2d');
+
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['M-Pesa', 'E-Mola'],
+        datasets: [{
+            data: [vendasMpesa, vendasEmola],
+            backgroundColor: ['#FF4136', '#FFA500'],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const valor = context.raw;
+                        const percent = ((valor / totalVendas) * 100).toFixed(1);
+                        return `${context.label}: ${valor} MZN (${percent}%)`;
+                    }
+                }
+            },
+            legend: { position: 'bottom' }
+        },
+        cutout: '60%'
+    }
+});
+</script>
+
+</body>
+</html>
