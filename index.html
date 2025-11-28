@@ -3,117 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Vertical</title>
+<title>Dashboard Compacto</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  :root{
-    --card-bg:#fff;
-    --muted:#6b7280;
-    --shadow:0 8px 30px rgba(15,23,42,0.08);
-    --red:#FF4136;
-    --orange:#FFA500;
-    --green:#16a34a;
-    font-family: 'Inter', sans-serif;
+  body {
+    font-family: Inter, sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
-  body{
-    margin:20px;
-    background:#f3f4f6;
-    display:flex;
-    justify-content:center;
-    font-size:14px;
-    color:#0f172a;
+  .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 700px;
   }
 
-  .wrap{
-    display:flex;
-    flex-direction:column;
-    gap:24px;
-    width:420px;
-    max-width:95%;
+  .card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   }
 
-  .card{
-    background:var(--card-bg);
-    border-radius:12px;
-    padding:16px;
-    box-shadow:var(--shadow);
-      margin-bottom: 2px;
+  .title {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 8px;
   }
 
-  .title{ font-weight:700; font-size:18px; margin-bottom:12px; }
+  /* Funil */
+  .funil {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .step-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6b7280;
+  }
+  .bar-wrap {
+    height: 12px;
+    background: #eef2f7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar {
+    height: 100%;
+    border-radius: 999px;
+  }
+  .impr { background: #2563eb; }
+  .click { background: #f59e0b; }
+  .lead { background: #16a34a; }
+  .cart { background: #ec4899; }
+  .checkout { background: #7c3aed; }
+  .buy { background: #ff6a88; }
 
-  /* Funil compacto */
-  .funil { display:flex; flex-direction:column; gap:2px; }
-  .step{ display:flex; flex-direction:column; gap:4px; }
-  .step-head{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
-  .bar-wrap{ height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; }
-  .bar{ height:100%; border-radius:999px; transition:width 600ms ease; }
-  .bar.impr { background: linear-gradient(90deg,#93c5fd,#2563eb); }
-  .bar.click { background: linear-gradient(90deg,#fcd34d,#f59e0b); }
-  .bar.lead { background: linear-gradient(90deg,#86efac,#16a34a); }
-  .bar.cart { background: linear-gradient(90deg,#fbcfe8,#ec4899); }
-  .bar.checkout { background: linear-gradient(90deg,#c7d2fe,#7c3aed); }
-  .bar.buy { background: linear-gradient(90deg,#ff9a9e,#ff6a88); }
-  .loss{ color:#ef4444; font-size:12px; }
+  /* Gráfico de vendas */
+  .chart-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    gap: 6px;
+  }
 
-  /* Gráfico */
-  .chart-card { display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px;}
-  .chart-title{ font-weight:700; font-size:16px; }
-  .chart-wrap{ width:280px; height:280px; position:relative; }
-  .center-total{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
-  .center-total .label{ color:var(--muted); font-size:13px; }
-  .center-total .num{ font-weight:800; font-size:20px; margin-top:4px; }
-  .legend-row{ display:flex; gap:12px; margin-top:8px; }
-  .legend-item{ display:flex; gap:8px; align-items:center; font-size:13px; color:var(--muted); }
-  .legend-swatch{ width:12px; height:12px; border-radius:3px; }
+  .chart-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+  .chart-wrap { position: relative; width: 200px; height: 200px; }
+  .center-total {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    pointer-events: none;
+  }
+  .center-total .label { font-size: 12px; color: #6b7280; }
+  .center-total .num { font-weight: 700; font-size: 16px; margin-top: 2px; }
+  .center-total .sub { font-size: 10px; color: #6b7280; margin-top: 2px; }
 
-  /* Cards Lucro/ROI/CPA */
-  .perf{ display:flex; gap:9px; margin-top:12px; justify-content:center; }
-  .box{ flex:1; background:#fbfdff; padding:8px; border-radius:10px; border:1px solid #eef2f7; text-align:center; font-size:12px; }
-  .box .v{ font-weight:700; font-size:16px; }
-  .box .t{ color:var(--muted); font-size:12px; }
-
+  .perf {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+  .box {
+    flex: 1;
+    background: #fbfdff;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid #eef2f7;
+    text-align: center;
+    font-size: 12px;
+  }
+  .box .v { font-weight: 600; font-size: 14px; }
+  .box .t { font-size: 10px; color: #6b7280; }
 </style>
 </head>
 <body>
 
 <div class="wrap">
 
-  <!-- Funil -->
+  <!-- Card Funil -->
   <div class="card" id="cardFunil">
     <div class="title">Funil de Conversão</div>
-    <div class="funil" id="funilConversion"></div>
+    <div class="funil" id="funil">
+      <!-- Steps gerados por JS -->
+    </div>
   </div>
 
-  <!-- Gráfico + Cards -->
-  <div class="card chart-card" id="cardGraficoVendas">
+  <!-- Card Gráfico -->
+  <div class="card chart-card" id="cardGrafico">
     <div class="chart-title">Gráfico de Vendas</div>
     <div class="chart-wrap">
-      <canvas id="doughnutChartVendas" width="280" height="280"></canvas>
-      <div class="center-total" id="centerTotalVendas">
+      <canvas id="doughnutChart" width="200" height="200"></canvas>
+      <div class="center-total">
         <div class="label">TOTAL</div>
-        <div class="num" id="centerValueVendas">0 MT</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px;" id="centerSubVendas">M-Pesa + E-Mola</div>
+        <div class="num" id="centerValue">0 MT</div>
+        <div class="sub">M-Pesa + E-Mola</div>
       </div>
     </div>
-
-    <div class="legend-row">
-      <div class="legend-item"><div class="legend-swatch" style="background:#FF4136"></div>M-Pesa</div>
-      <div class="legend-item"><div class="legend-swatch" style="background:#FFA500"></div>E-Mola</div>
-    </div>
-
     <div class="perf">
       <div class="box">
-        <div class="v" id="profitBoxVendas">0 MT</div>
+        <div class="v" id="profitBox">0 MT</div>
         <div class="t">Lucro</div>
       </div>
       <div class="box">
-        <div class="v" id="roiBoxVendas">0%</div>
+        <div class="v" id="roiBox">0%</div>
         <div class="t">ROI</div>
       </div>
       <div class="box">
-        <div class="v" id="cpaBoxVendas">0 MT</div>
+        <div class="v" id="cpaBox">0 MT</div>
         <div class="t">Custo por Venda</div>
       </div>
     </div>
@@ -122,68 +157,56 @@
 </div>
 
 <script>
-const fmt = n => new Intl.NumberFormat('pt-MZ').format(Math.round(n));
-
-// Funil
-const stepsData = [
-  { id:'imprF', name:'Impressões', value:35000 },
-  { id:'clickF', name:'Cliques', value:2120 },
-  { id:'leadF', name:'Leads', value:420 },
-  { id:'cartF', name:'Adições ao carrinho', value:90 },
-  { id:'checkoutF', name:'Início de checkout', value:50 },
-  { id:'buyF', name:'Vendas', value:32 }
+const funilData = [
+  {name:'Impressões', value:35000, color:'#2563eb'},
+  {name:'Cliques', value:2120, color:'#f59e0b'},
+  {name:'Leads', value:420, color:'#16a34a'},
+  {name:'Adições ao carrinho', value:90, color:'#ec4899'},
+  {name:'Início de checkout', value:50, color:'#7c3aed'},
+  {name:'Vendas', value:32, color:'#ff6a88'}
 ];
 
-const funil = document.getElementById('funilConversion');
-const base = Math.max(...stepsData.map(s=>s.value),1);
-stepsData.forEach((s,i)=>{
-  const nextVal = (i<stepsData.length-1)? stepsData[i+1].value : s.value;
-  const dropPct = s.value ? (100 - (nextVal/s.value*100)) : 0;
-  const el = document.createElement('div');
-  el.className = 'step';
-  el.innerHTML = `
-    <div class="step-head">
-      <div>${s.name}</div>
-      <div>${fmt(s.value)} <span class="loss">(${dropPct.toFixed(1)}%)</span></div>
-    </div>
-    <div class="bar-wrap"><div class="bar ${s.id}" style="width:${(s.value/base*100).toFixed(1)}%"></div></div>
-  `;
-  funil.appendChild(el);
-});
+function buildFunnel(){
+  const funil = document.getElementById('funil');
+  const max = Math.max(...funilData.map(s=>s.value));
+  funil.innerHTML = '';
+  funilData.forEach(s=>{
+    const step = document.createElement('div');
+    step.className='step';
+    const pct = ((s.value/max)*100).toFixed(1);
+    step.innerHTML = `
+      <div class="step-head">
+        <div>${s.name}</div>
+        <div>${s.value}</div>
+      </div>
+      <div class="bar-wrap"><div class="bar" style="width:${pct}%; background:${s.color}"></div></div>
+    `;
+    funil.appendChild(step);
+  });
+}
+buildFunnel();
 
 // Gráfico
-const mpesa = 4000;
-const emola = 2400;
-const total = mpesa + emola;
-document.getElementById('centerValueVendas').textContent = fmt(total)+' MT';
-
-const ctx = document.getElementById('doughnutChartVendas').getContext('2d');
-new Chart(ctx, {
+const mpesa = 4000, emola=2400;
+const ctx = document.getElementById('doughnutChart').getContext('2d');
+new Chart(ctx,{
   type:'doughnut',
   data:{
     labels:['M-Pesa','E-Mola'],
     datasets:[{
-      data:[mpesa, emola],
+      data:[mpesa,emola],
       backgroundColor:['#FF4136','#FFA500']
     }]
   },
   options:{
     cutout:'62%',
-    plugins:{ legend:{ display:false } }
+    plugins:{legend:{display:false}}
   }
 });
-
-// Cards Lucro/ROI/CPA
-const revenue = 6400;
-const invested = 1200;
-const purchases = 32;
-const profit = revenue-invested;
-const roi = invested? ((profit/invested)*100).toFixed(1) : 0;
-const cpa = purchases? (invested/purchases) : 0;
-document.getElementById('profitBoxVendas').textContent = fmt(profit)+' MT';
-document.getElementById('roiBoxVendas').textContent = roi+'%';
-document.getElementById('cpaBoxVendas').textContent = fmt(cpa)+' MT';
-
+document.getElementById('centerValue').textContent=(mpesa+emola)+' MT';
+document.getElementById('profitBox').textContent='6400 MT';
+document.getElementById('roiBox').textContent='233%';
+document.getElementById('cpaBox').textContent='120 MT';
 </script>
 </body>
 </html>
