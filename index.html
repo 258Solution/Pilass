@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Vertical</title>
+<title>Dashboard Compacto</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root{
     --card-bg:#fff;
     --muted:#6b7280;
-    --shadow:0 8px 30px rgba(15,23,42,0.08);
+    --shadow:0 6px 20px rgba(0,0,0,0.08);
     --red:#FF4136;
     --orange:#FFA500;
     --green:#16a34a;
@@ -28,25 +28,25 @@
   .wrap{
     display:flex;
     flex-direction:column;
-    gap:1px;
-    width:420px;
+    gap:16px;
+    width:360px;
     max-width:95%;
   }
 
   .card{
     background:var(--card-bg);
     border-radius:12px;
-    padding:10px;
+    padding:12px;
     box-shadow:var(--shadow);
   }
 
-  .title{ font-weight:700; font-size:18px; margin-bottom:12px; }
+  .title{ font-weight:700; font-size:16px; margin-bottom:8px; }
 
   /* Funil compacto */
-  .funil { display:flex; flex-direction:column; gap:8px; }
-  .step{ display:flex; flex-direction:column; gap:4px; }
+  .funil { display:flex; flex-direction:column; gap:6px; }
+  .step{ display:flex; flex-direction:column; gap:2px; }
   .step-head{ display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
-  .bar-wrap{ height:10px; background:#eef2f7; border-radius:999px; overflow:hidden; }
+  .bar-wrap{ height:8px; background:#eef2f7; border-radius:999px; overflow:hidden; }
   .bar{ height:100%; border-radius:999px; transition:width 600ms ease; }
   .bar.impr { background: linear-gradient(90deg,#93c5fd,#2563eb); }
   .bar.click { background: linear-gradient(90deg,#fcd34d,#f59e0b); }
@@ -57,22 +57,21 @@
   .loss{ color:#ef4444; font-size:12px; }
 
   /* Gráfico */
-  .chart-card { display:flex; flex-direction:column; align-items:center; gap:10px; padding:5px;}
-  .chart-title{ font-weight:700; font-size:16px; }
-  .chart-wrap{ width:190px; height:190px; position:relative; }
+  .chart-card { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .chart-title{ font-weight:700; font-size:15px; }
+  .chart-wrap{ width:240px; height:240px; position:relative; }
   .center-total{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
-  .center-total .label{ color:var(--muted); font-size:13px; }
-  .center-total .num{ font-weight:800; font-size:20px; margin-top:4px; }
-  .legend-row{ display:flex; gap:12px; margin-top:8px; }
-  .legend-item{ display:flex; gap:8px; align-items:center; font-size:13px; color:var(--muted); }
-  .legend-swatch{ width:12px; height:12px; border-radius:3px; }
+  .center-total .label{ color:var(--muted); font-size:12px; }
+  .center-total .num{ font-weight:700; font-size:18px; margin-top:2px; }
+  .legend-row{ display:flex; gap:12px; margin-top:6px; }
+  .legend-item{ display:flex; gap:6px; align-items:center; font-size:12px; color:var(--muted); }
+  .legend-swatch{ width:10px; height:10px; border-radius:2px; }
 
   /* Cards Lucro/ROI/CPA */
-  .perf{ display:flex; gap:6px; margin-top:12px; justify-content:center; }
-  .box{ flex:1; background:#fbfdff; padding:8px; border-radius:10px; border:1px solid #eef2f7; text-align:center; font-size:12px; }
-  .box .v{ font-weight:700; font-size:10px; }
-  .box .t{ color:var(--muted); font-size:10px; }
-
+  .perf{ display:flex; gap:8px; margin-top:8px; justify-content:center; }
+  .box{ flex:1; background:#fbfdff; padding:6px; border-radius:8px; border:1px solid #eef2f7; text-align:center; font-size:12px; }
+  .box .v{ font-weight:700; font-size:14px; }
+  .box .t{ color:var(--muted); font-size:11px; }
 </style>
 </head>
 <body>
@@ -89,11 +88,11 @@
   <div class="card chart-card" id="cardGraficoVendas">
     <div class="chart-title">Gráfico de Vendas</div>
     <div class="chart-wrap">
-      <canvas id="doughnutChartVendas" width="200" height="200"></canvas>
+      <canvas id="doughnutChartVendas" width="240" height="240"></canvas>
       <div class="center-total" id="centerTotalVendas">
         <div class="label">TOTAL</div>
         <div class="num" id="centerValueVendas">0 MT</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px;" id="centerSubVendas">M-Pesa + E-Mola</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;" id="centerSubVendas">M-Pesa + E-Mola</div>
       </div>
     </div>
 
@@ -167,7 +166,7 @@ new Chart(ctx, {
     }]
   },
   options:{
-    cutout:'62%',
+    cutout:'60%',
     plugins:{ legend:{ display:false } }
   }
 });
@@ -182,7 +181,6 @@ const cpa = purchases? (invested/purchases) : 0;
 document.getElementById('profitBoxVendas').textContent = fmt(profit)+' MT';
 document.getElementById('roiBoxVendas').textContent = roi+'%';
 document.getElementById('cpaBoxVendas').textContent = fmt(cpa)+' MT';
-
 </script>
 </body>
 </html>
