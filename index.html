@@ -112,12 +112,80 @@ body{
     height:10px;
     border-radius:2px;
 }
+  #btnPeriodo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    width: 150px;
+    margin-bottom: 8px;
+}
+
+#btnPeriodo .arrow {
+    font-size: 12px;
+}
+
+#periodoDrop {
+    display: none; /* inicialmente escondido */
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    padding: 8px 0;
+    position: absolute;
+    z-index: 10;
+    width: 150px;
+}
+
+#periodoDrop .option {
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+#periodoDrop .option:hover,
+#periodoDrop .option.selected {
+    background-color: #f0f0f0;
+}
+
+#btnCalendario {
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+#calendarInput {
+    position: absolute;
+    left: -9999px; /* escondido mas funcional */
+}
 </style>
 </head>
 <body>
 
 <div class="titulo-dashboard">Dashboard Métricas</div>
 
+<!-- Botão Período -->
+<div id="btnPeriodo">
+    <span id="periodoSelected">Hoje</span>
+    <i class="bi bi-chevron-down arrow"></i>
+</div>
+
+<!-- Dropdown Período -->
+<div id="periodoDrop">
+    <div class="option selected" data-value="Hoje">Hoje</div>
+    <div class="option" data-value="Ontem">Ontem</div>
+    <div class="option" data-value="Últimos 7 dias">Últimos 7 dias</div>
+    <div class="option" data-value="Últimos 30 dias">Últimos 30 dias</div>
+    <div id="btnCalendario">Calendário</div>
+    <input type="date" id="calendarInput">
+</div>
+  
 <div class="card">
    <div class="secao">
         <i class="bi bi-cash-coin secao-icon"></i>
@@ -202,6 +270,47 @@ document.querySelectorAll('.legend-item').forEach(item=>{
     meta.hidden = !meta.hidden;
     doughnutChart.update();
   });
+});
+
+  const btnPeriodo = document.getElementById("btnPeriodo");
+const periodoDrop = document.getElementById("periodoDrop");
+const options = document.querySelectorAll(".option");
+const periodoSelected = document.getElementById("periodoSelected");
+const btnCalendario = document.getElementById("btnCalendario");
+const calendarInput = document.getElementById("calendarInput");
+
+// Toggle dropdown
+btnPeriodo.addEventListener("click", () => {
+    periodoDrop.style.display = periodoDrop.style.display === "flex" ? "none" : "flex";
+});
+
+// Seleção de opção
+options.forEach(opt => {
+    opt.addEventListener("click", () => {
+        options.forEach(o => o.classList.remove("selected"));
+        opt.classList.add("selected");
+        periodoSelected.textContent = opt.dataset.value;
+        periodoDrop.style.display = "none";
+    });
+});
+
+// Abrir calendário
+btnCalendario.addEventListener("click", () => {
+    calendarInput.focus();
+    calendarInput.click();
+});
+
+// Seleção de data
+calendarInput.addEventListener("change", () => {
+    const date = new Date(calendarInput.value);
+    if(date.toString() !== "Invalid Date"){
+        const day = String(date.getDate()).padStart(2,'0');
+        const month = String(date.getMonth()+1).padStart(2,'0');
+        const year = date.getFullYear();
+        periodoSelected.textContent = `${day}/${month}/${year}`;
+        options.forEach(o => o.classList.remove("selected"));
+        periodoDrop.style.display = "none";
+    }
 });
 </script>
 
