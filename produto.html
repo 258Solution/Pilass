@@ -1,89 +1,106 @@
-<!DOCTYPE html>  <html lang="pt-BR">  
-<head>  
-<meta charset="UTF-8" />  
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
-<title>Produtos – Busca & Paginação</title>  
-<style>  
-  body { font-family: Arial; background: #f8f9fc; padding: 20px; margin: 0; }  
-  .container { max-width: 800px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }  
-  h1 { display:flex; justify-content: space-between; align-items: center; }  
-  button { background: #5a5cd1; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor:pointer; }  
-  input { width:260px; padding:10px; margin:10px 0; border-radius:6px; border:1px solid #ccc; }  
-  table { width:100%; border-collapse: collapse; margin-top:10px; }  
-  th, td { text-align:left; padding:12px; border-bottom:1px solid #eee; }  
-  .status { padding: 4px 10px; border-radius:12px; background:#d1f1dc; color:#1a7f4e; font-weight:bold; }  
-  .pagination { display:flex; justify-content: space-between; margin-top:15px; }  
-  .pagination button:disabled { opacity:0.5; cursor:default; }  
-</style>  
-</head>  
-<body> 
-  <div class="container">  
-    <h1>Produtos</h1>
-   <!-- Botão Criar Produto usando div onclick -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produtos – Busca & Paginação</title>
+<style>
+  body { font-family: Arial; background: #f8f9fc; padding: 20px; margin: 0; display: flex; justify-content: center; }
+  .container { width: 800px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  h1 { display:flex; justify-content: space-between; align-items: center; }
+  /* botão estilo div */
+  .btn-div {
+    cursor: pointer;
+    background: #5a5cd1;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  .btn-div:hover { background: #4848c4; }
+  input { width:260px; padding:10px; margin:10px 0; border-radius:6px; border:1px solid #ccc; display: block; }
+  table { width:100%; border-collapse: collapse; margin-top:10px; }
+  th, td { text-align:left; padding:12px; border-bottom:1px solid #eee; }
+  .status { padding: 4px 10px; border-radius:12px; background:#d1f1dc; color:#1a7f4e; font-weight:bold; }
+  .pagination { display:flex; justify-content: space-between; margin-top:15px; }
+  .pagination button { padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; cursor: pointer; }
+  .pagination button:disabled { opacity:0.5; cursor: default; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Produtos</h1>
+  
+  <!-- Botão Criar Produto com cor -->
   <div class="btn-div" onclick="window.location.href='criar-produtos.html';">
-    <i class="bi bi-plus-square"></i> criar Produto
+    + Criar Produto
   </div>
   
-    <input type="text" id="buscaInput" placeholder="Buscar por nome..." />    <table>  
-    <thead>  
-      <tr>  
-        <th>Nome</th>  
-        <th>Preço</th>  
-        <th>Status</th>  
-      </tr>  
-    </thead>  
-    <tbody id="tabelaBody"></tbody>  
-  </table>    <div class="pagination">  
-    <button id="prevBtn">Anterior</button>  
-    <span id="pageInfo">1 / 1</span>  
-    <button id="nextBtn">Próximo</button>  
-  </div>  
-</div>  <script>  
-  let dadosProdutos = [  
-    
-  ];  
-  const rowsPerPage = 3;  
-  let currentPage = 1;  
-  let filtered = [...dadosProdutos];  
-  const tabelaBody = document.getElementById('tabelaBody');  
-  const prevBtn = document.getElementById('prevBtn');  
-  const nextBtn = document.getElementById('nextBtn');  
-  const pageInfo = document.getElementById('pageInfo');  
-  const buscaInput = document.getElementById('buscaInput');  
-  
-  function renderTable(){  
-    const totalPages = Math.ceil(filtered.length/rowsPerPage) || 1;  
-    if(currentPage>totalPages) currentPage=totalPages;  
-    const start=(currentPage-1)*rowsPerPage;  
-    const end=start+rowsPerPage;  
-    const paginatedItems = filtered.slice(start,end);  
-    tabelaBody.innerHTML='';  
-    for(let item of paginatedItems){  
-      const statusClass = item.status==='Ativo'?'status':'status inativo';  
-      const tr=document.createElement('tr');  
-      tr.innerHTML = `<td>${item.nome}</td><td>${item.preco}</td><td><span class="${statusClass}">${item.status}</span></td>`;  
-      tabelaBody.appendChild(tr);  
-    }  
-    pageInfo.textContent=`${currentPage} / ${totalPages}`;  
-    prevBtn.disabled = currentPage===1;  
-    nextBtn.disabled = currentPage===totalPages;  
-  }  
-  
-  prevBtn.addEventListener('click', ()=>{ if(currentPage>1){currentPage--; renderTable();} });  
-  nextBtn.addEventListener('click', ()=>{ const totalPages=Math.ceil(filtered.length/rowsPerPage); if(currentPage<totalPages){currentPage++; renderTable();} });  
-  buscaInput.addEventListener('input', ()=>{  
-    const search = buscaInput.value.trim().toLowerCase();  
-    filtered = dadosProdutos.filter(item => item.nome.toLowerCase().includes(search));  
-    currentPage=1;  
-    renderTable();  
-  });  
-  
-  renderTable();  
-  
-  // Botão Criar produto -> leva para outra página  
-  const btnNovo = document.getElementById('btnNovo');  
-  btnNovo.onclick = () => {  
-    window.location.href = 'criar-produto.html'; // <--- link da nova página  
-  }  
-</script>  </body>  
-</html>  
+  <input type="text" id="buscaInput" placeholder="Buscar por nome..." />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="tabelaBody"></tbody>
+  </table>
+
+  <div class="pagination">
+    <button id="prevBtn">Anterior</button>
+    <span id="pageInfo">1 / 1</span>
+    <button id="nextBtn">Próximo</button>
+  </div>
+</div>
+
+<script>
+  let dadosProdutos = [];
+  const rowsPerPage = 3;
+  let currentPage = 1;
+  let filtered = [...dadosProdutos];
+  const tabelaBody = document.getElementById('tabelaBody');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageInfo = document.getElementById('pageInfo');
+  const buscaInput = document.getElementById('buscaInput');
+
+  function renderTable(){
+    const totalPages = Math.ceil(filtered.length/rowsPerPage) || 1;
+    if(currentPage>totalPages) currentPage=totalPages;
+    const start=(currentPage-1)*rowsPerPage;
+    const end=start+rowsPerPage;
+    const paginatedItems = filtered.slice(start,end);
+    tabelaBody.innerHTML='';
+    for(let item of paginatedItems){
+      const statusClass = item.status==='Ativo'?'status':'status inativo';
+      const tr=document.createElement('tr');
+      tr.innerHTML = `<td>${item.nome}</td><td>${item.preco}</td><td><span class="${statusClass}">${item.status}</span></td>`;
+      tabelaBody.appendChild(tr);
+    }
+    pageInfo.textContent=`${currentPage} / ${totalPages}`;
+    prevBtn.disabled = currentPage===1;
+    nextBtn.disabled = currentPage===totalPages;
+  }
+
+  prevBtn.addEventListener('click', ()=>{ if(currentPage>1){currentPage--; renderTable();} });
+  nextBtn.addEventListener('click', ()=>{ const totalPages=Math.ceil(filtered.length/rowsPerPage); if(currentPage<totalPages){currentPage++; renderTable();} });
+  buscaInput.addEventListener('input', ()=>{
+    const search = buscaInput.value.trim().toLowerCase();
+    filtered = dadosProdutos.filter(item => item.nome.toLowerCase().includes(search));
+    currentPage=1;
+    renderTable();
+  });
+
+  renderTable();
+</script>
+</body>
+</html>
