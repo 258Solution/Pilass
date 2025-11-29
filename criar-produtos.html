@@ -164,6 +164,41 @@
         preview.src = URL.createObjectURL(file);  
         preview.style.display = 'block';  
       }  
-    });  
+    }); 
+    
+// Função para aplicar o tema
+function aplicarTema(tema) {
+    if(tema === 'dark') {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('tema', 'dark');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('tema', 'light');
+    }
+}
+
+// Verifica o tema salvo no localStorage ao carregar a página
+const temaSalvo = localStorage.getItem('tema');
+if (temaSalvo) {
+    aplicarTema(temaSalvo);
+}
+
+// Alternar tema com botão (caso tenha um botão com id "toggle-theme")
+const toggleBtn = document.getElementById('toggle-theme');
+if(toggleBtn){
+    toggleBtn.addEventListener('click', () => {
+        if(document.body.classList.contains('dark-mode')){
+            aplicarTema('light');
+        } else {
+            aplicarTema('dark');
+        }
+    });
+}
+
+// Detecta preferências do sistema na primeira vez
+if(!temaSalvo && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+    aplicarTema('dark');
+}
+</script>
   </script>  </body>  
 </html>  
