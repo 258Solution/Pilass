@@ -16,12 +16,15 @@
   .pagination button:disabled { opacity:0.5; cursor:default; }  
 </style>  
 </head>  
-<body>  <div class="container">  
-  <h1>  
-    Produtos   
-    <!-- Botão agora leva para outra página -->  
-    <button id="btnNovo">Criar Poduto</button>  
-  </h1>    <input type="text" id="buscaInput" placeholder="Buscar por nome..." />    <table>  
+<body> 
+  <div class="container">  
+    <h1>Produtos</h1>
+   <!-- Botão Criar Produto usando div onclick -->
+  <div class="btn-div" onclick="window.location.href='criar-produtos.html';">
+    <i class="bi bi-plus-square"></i> Criar Produto
+  </div>
+  
+    <input type="text" id="buscaInput" placeholder="Buscar por nome..." />    <table>  
     <thead>  
       <tr>  
         <th>Nome</th>  
