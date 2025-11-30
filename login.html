@@ -1,27 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Login</title>
 <style>
-:root{--accent:#0077cc;--bg:#f6f8fb;--card:#ffffff;--text:#0f172a;--muted:#6b7280}
-body{margin:0;font-family:Inter,sans-serif;background:var(--bg);display:flex;justify-content:center;align-items:center;min-height:100vh}
-.card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 8px 30px rgba(11,23,39,0.08);width:100%;max-width:270px}
-h2{margin-top:0;margin-bottom:16px;font-size:20px;color:var(--text);text-align:center}
-label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text)}
-input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;margin-bottom:12px;font-size:14px}
-.btn{display:block;width:100%;padding:14px;background:var(--accent);color:#fff;font-weight:600;border:none;border-radius:12px;cursor:pointer;font-size:16px;margin-top:8px}
-.btn:disabled{opacity:0.5;cursor:not-allowed}
-.bottom-text{text-align:center;margin-top:16px;font-size:14px;color:var(--muted)}
-.bottom-text a{color:var(--accent);text-decoration:none;font-weight:600;margin-left:4px}
+/* Mesmos estilos do index.html */
+:root{
+  --accent:#0077cc;
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#6b7280;
+}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+.card{
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(11,23,39,0.08);
+  width: 100%;
+  max-width: 270px;
+}
+h2{
+  margin-top:0;
+  margin-bottom:16px;
+  font-size:20px;
+  color: var(--text);
+  text-align:center;
+}
+label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+  font-size:13px;
+  color: var(--text);
+}
+input[type="email"], input[type="password"]{
+  width:95%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e6e9ef;
+  margin-bottom:12px;
+  font-size:14px;
+}
+.btn{
+  display:block;
+  width:100%;
+  padding:14px;
+  background: var(--accent);
+  color:#fff;
+  font-weight:600;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+  margin-top:8px;
+}
+.bottom-text{
+  text-align:center;
+  margin-top:16px;
+  font-size:14px;
+  color: var(--muted);
+}
+.bottom-text a{
+  color: var(--accent);
+  text-decoration:none;
+  font-weight:600;
+  margin-left:4px;
+}
 </style>
 </head>
 <body>
 
 <div class="card">
   <h2>Login</h2>
-  <form id="loginForm" onsubmit="event.preventDefault(); window.location.href='dashboard.html';">
+  <form id="loginForm">
     <label for="email">E-mail</label>
     <input type="email" id="email" required>
 
@@ -33,12 +95,11 @@ input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:
 
   <div class="bottom-text">
     <a href="reset-password.html">Esqueceu a senha?</a>
-  </div>
-
-  <div class="bottom-text">
-    Não tem conta? <a href="index.html">Criar Conta</a>
+    <br>
+    Não tem conta? <a href="index.html">Criar conta</a>
   </div>
 </div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
@@ -56,18 +117,13 @@ input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:
   const auth = getAuth(app);
 
   const form = document.getElementById("loginForm");
-  const emailEl = document.getElementById("email");
-  const passwordEl = document.getElementById("password");
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    const email = emailEl.value.trim();
-    const password = passwordEl.value.trim();
-
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if (userCredential.user.emailVerified) {
+      if(userCredential.user.emailVerified){
         window.location.href = "dashboard.html";
       } else {
         alert("Verifique seu email antes de entrar!");
@@ -77,5 +133,6 @@ input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:
     }
   });
 </script>
+
 </body>
-</html>
+</html>    
