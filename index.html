@@ -45,39 +45,56 @@ input[type="text"],input[type="email"],input[type="password"]{width:95%;padding:
     Já tem uma conta? <a href="login.html">Entrar</a>
   </div>
 </div>
-<script type="module">
-  // Import Firebase
+  <script type="module">
+  // Import Firebase (via CDN)
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    sendEmailVerification 
+  } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
+  // *** SUA CONFIG REAL DO FIREBASE ***
   const firebaseConfig = {
-    apiKey: "COLE_AQUI_SUA_API_KEY",
-    authDomain: "SEU_PROJETO.firebaseapp.com",
-    projectId: "SEU_PROJETO",
-    storageBucket: "SEU_PROJETO.appspot.com",
-    messagingSenderId: "SEU_SENDER_ID",
-    appId: "SEU_APP_ID"
+    apiKey: "AIzaSyDN6WD6rxB7CqqK-OMRTkzJlSz-xNbe_Ks",
+    authDomain: "xavamoz.firebaseapp.com",
+    projectId: "xavamoz",
+    storageBucket: "xavamoz.firebasestorage.app",
+    messagingSenderId: "681441008756",
+    appId: "1:681441008756:web:433985ef3f374672b78521"
   };
 
+  // Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  // Elementos do formulário
   const form = document.getElementById("signupForm");
   const nameEl = document.getElementById("name");
   const emailEl = document.getElementById("email");
   const passwordEl = document.getElementById("password");
 
+  // Ação ao criar conta
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const email = emailEl.value.trim();
     const password = passwordEl.value.trim();
+
     try {
+      // Criar usuário
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Enviar verificação por email
       await sendEmailVerification(userCredential.user);
-      alert("Conta criada! Verifique seu email para ativar a conta.");
-      window.location.href = "login.html"; // Redireciona para login
+
+      alert("Conta criada! Verifique seu email para ativar sua conta.");
+
+      // Vai para login
+      window.location.href = "login.html";
+
     } catch (error) {
-      alert(error.message);
+      alert("Erro: " + error.message);
     }
   });
 </script>
