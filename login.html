@@ -41,10 +41,14 @@ input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:
 </div>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+  import { 
+    getAuth, 
+    signInWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
+  // 🔥 CONFIG DO FIREBASE — TROQUE PELOS SEUS DADOS
   const firebaseConfig = {
-    apiKey: "COLE_AQUI_SUA_API_KEY",
+    apiKey: "SUA_API_KEY",
     authDomain: "SEU_PROJETO.firebaseapp.com",
     projectId: "SEU_PROJETO",
     storageBucket: "SEU_PROJETO.appspot.com",
@@ -52,26 +56,30 @@ input[type="email"],input[type="password"]{width:95%;padding:10px;border-radius:
     appId: "SEU_APP_ID"
   };
 
+  // 🔥 Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  // 🔥 CAMPOS DO FORMULÁRIO DE LOGIN
   const form = document.getElementById("loginForm");
   const emailEl = document.getElementById("email");
   const passwordEl = document.getElementById("password");
 
+  // 🔥 FUNÇÃO DE LOGIN
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const email = emailEl.value.trim();
     const password = passwordEl.value.trim();
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if(userCredential.user.emailVerified){
-        window.location.href = "dashboard.html"; // Redireciona para dashboard
-      } else {
-        alert("Verifique seu email antes de entrar!");
-      }
+
+      // Se logou → ir para dashboard
+      window.location.href = "dashboard.html";
+
     } catch (error) {
-      alert(error.message);
+      alert("Erro ao entrar: " + error.message);
     }
   });
 </script>
