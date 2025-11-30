@@ -1,11 +1,10 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Vendoo</title>
 <style>
-/* Mesmos estilos do index.html */
 :root{
   --accent:#0077cc;
   --bg:#f6f8fb;
@@ -29,28 +28,13 @@ body{
   box-shadow: 0 8px 30px rgba(11,23,39,0.08);
   width: 100%;
   max-width: 270px;
+  text-align:center;
 }
 h2{
   margin-top:0;
   margin-bottom:16px;
   font-size:20px;
   color: var(--text);
-  text-align:center;
-}
-label{
-  display:block;
-  margin-bottom:6px;
-  font-weight:600;
-  font-size:13px;
-  color: var(--text);
-}
-input[type="email"], input[type="password"]{
-  width:95%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #e6e9ef;
-  margin-bottom:12px;
-  font-size:14px;
 }
 .btn{
   display:block;
@@ -63,7 +47,7 @@ input[type="email"], input[type="password"]{
   border-radius:12px;
   cursor:pointer;
   font-size:16px;
-  margin-top:8px;
+  margin:8px 0;
 }
 .bottom-text{
   text-align:center;
@@ -83,27 +67,20 @@ input[type="email"], input[type="password"]{
 
 <div class="card">
   <h2>Login</h2>
-  <form id="loginForm">
-    <label for="email">E-mail</label>
-    <input type="email" id="email" required>
-
-    <label for="password">Senha</label>
-    <input type="password" id="password" required>
-
-    <button type="submit" class="btn">Entrar</button>
-  </form>
-
+  
+  <!-- Botão login com Google -->
+  <button id="googleLogin" class="btn">Login com Google</button>
+  
   <div class="bottom-text">
-    <a href="reset-password.html">Esqueceu a senha?</a>
-    <br>
     Não tem conta? <a href="index.html">Criar conta</a>
   </div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
+  // Configuração do Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDN6WD6rxB7CqqK-OMRTkzJlSz-xNbe_Ks",
     authDomain: "xavamoz.firebaseapp.com",
@@ -115,24 +92,22 @@ input[type="email"], input[type="password"]{
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-  const form = document.getElementById("loginForm");
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+  // Botão de login
+  const googleBtn = document.getElementById("googleLogin");
+  googleBtn.addEventListener("click", async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      if(userCredential.user.emailVerified){
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Verifique seu email antes de entrar!");
-      }
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log("Usuário autenticado:", user.email);
+      window.location.href = "dashboard.html"; // Redireciona para dashboard
     } catch (error) {
-      alert(error.message);
+      console.error(error);
+      alert("Erro ao fazer login com Google: " + error.message);
     }
   });
 </script>
 
 </body>
-</html>    
+</html>
