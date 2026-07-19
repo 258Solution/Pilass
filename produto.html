@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novo Produto</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Plus Jakarta Sans',sans-serif;
+}
+
+body{
+background:#000;
+color:#fff;
+padding:20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+background:#141414;
+padding:25px;
+border-radius:15px;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+padding:14px;
+margin-bottom:15px;
+background:#222;
+border:none;
+border-radius:10px;
+color:#fff;
+}
+
+textarea{
+height:120px;
+resize:none;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#00e676;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Novo Produto</h2>
+
+<input type="file" id="imagem">
+
+<input
+type="text"
+id="nome"
+placeholder="Nome do produto">
+
+<textarea
+id="descricao"
+placeholder="Descrição"></textarea>
+
+<input
+type="number"
+id="preco"
+placeholder="Preço">
+
+<input
+type="text"
+id="checkout"
+placeholder="Código do checkout">
+
+<select id="metodo">
+
+<option value="mpesa">M-Pesa</option>
+
+<option value="emola">e-Mola</option>
+
+</select>
+
+<button onclick="salvarProduto()">
+Salvar Produto
+</button>
+
+</div>
+
+<script type="module" src="js/produto.js"></script>
+
+</body>
+</html>
